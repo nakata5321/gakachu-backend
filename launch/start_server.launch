@@ -1,0 +1,3 @@
+<launch>
+  <node name="frontend" type="main.py" pkg="gakachu_frontend" output="screen"/>
+</launch>
