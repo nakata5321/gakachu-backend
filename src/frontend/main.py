@@ -7,20 +7,27 @@ import threading
 
 import uvicorn
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Form
+from fastapi.responses import HTMLResponse
 
 # ROS related
 
 threading.Thread(target=lambda: rospy.init_node("frontend", disable_signals=True)).start()
 
-hello_publisher = rospy.Publisher("/hello_world", String, queue_size=1)
+word_publisher = rospy.Publisher("/word_for_gakachu", String, queue_size=1)
+assets_dir = rospy.get_param("/frontend/assets")
 
 app = FastAPI()
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 def read_root():
-    hello_publisher.publish(String("Hello world"))
-    return "Hello World"
+    content = open(assets_dir + "index.html").read()
+    return content
+
+@app.post("/send_word")
+def send_word(word: str = Form(...)):
+    word_publisher.publish(String(word))
+    return f"Word {word} has been published"
 
 
 if __name__ == "__main__":

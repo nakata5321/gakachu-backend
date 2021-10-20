@@ -24,3 +24,10 @@ install(
         ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
 )
 
+install(
+	DIRECTORY
+        assets/
+    DESTINATION
+        ${CATKIN_PACKAGE_SHARE_DESTINATION}/assets
+)
+

@@ -1,3 +1,5 @@
 <launch>
-  <node name="frontend" type="main.py" pkg="gakachu_frontend" output="screen"/>
+    <node name="frontend" type="main.py" pkg="gakachu_frontend" output="screen">
+        <param name="assets" value="$(find gakachu_frontend)/assets/" />
+    </node>
 </launch>
