@@ -28,6 +28,6 @@ install(
 	DIRECTORY
         assets/
     DESTINATION
-        ${CATKIN_PACKAGE_SHARE_DESTINATION}/assets
+        ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 

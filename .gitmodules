@@ -1,0 +1,3 @@
+[submodule "gakachu-frontend"]
+	path = gakachu-frontend
+	url = https://github.com/IvanGlebov/gakachu-frontend.git

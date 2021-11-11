@@ -9,6 +9,9 @@ import uvicorn
 
 from fastapi import FastAPI, Form
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+
+from starlette.responses import FileResponse
 
 # ROS related
 
@@ -18,11 +21,13 @@ word_publisher = rospy.Publisher("/word_for_gakachu", String, queue_size=1)
 assets_dir = rospy.get_param("/frontend/assets")
 
 app = FastAPI()
+#app.mount(assets_dir, StaticFiles(directory="assets"), name="assets")
+app.mount("/assets", StaticFiles(directory=assets_dir + "assets"), name="assets")
 
-@app.get("/", response_class=HTMLResponse)
+@app.get("/", response_class=FileResponse)
 def read_root():
-    content = open(assets_dir + "index.html").read()
-    return content
+    
+    return FileResponse("index.html")
 
 @app.post("/send_word")
 def send_word(word: str = Form(...)):
