@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import rospy
-from std_msgs.msg import String
+# import rospy
+# from std_msgs.msg import String
 import threading
 
 import uvicorn
@@ -14,24 +14,24 @@ from pydantic import BaseModel
 
 # ROS related
 
-threading.Thread(target=lambda: rospy.init_node("frontend", disable_signals=True)).start()
+# threading.Thread(target=lambda: rospy.init_node("frontend", disable_signals=True)).start()
 
 
-def callback(ros_data: String) -> None:
-    global status
-    check = ros_data.data
-    if check == "start":
-        status = "busy"
-    else:
-        status = "available"
+# def callback(ros_data: String) -> None:
+#     global status
+#     check = ros_data.data
+#     if check == "start":
+#         status = "busy"
+#     else:
+#         status = "available"
 
 
-word_publisher = rospy.Publisher("/word_for_gakachu", String, queue_size=1)
-color_publisher = rospy.Publisher("/color_height", String, queue_size=1)
-status_listener = rospy.Subscriber("/film", String, callback, queue_size=1)
+#word_publisher = rospy.Publisher("/word_for_gakachu", String, queue_size=1)
+#color_publisher = rospy.Publisher("/color_height", String, queue_size=1)
+#status_listener = rospy.Subscriber("/film", String, callback, queue_size=1)
 
 
-dist_dir = rospy.get_param("/frontend/dist")
+#dist_dir = rospy.get_param("/frontend/dist")
 
 
 app = FastAPI()
@@ -40,6 +40,8 @@ app = FastAPI()
 class Word(BaseModel):
     word: str
 
+
+dist_dir = "dist/"
 
 origins = ["*"]
 
@@ -73,7 +75,7 @@ def root(request: Request):
 
 @app.post("/send_word", response_class=JSONResponse)
 def send_word(words: Word):
-    word_publisher.publish(String(words.word))
+    # word_publisher.publish(String(words.word))
     return {"status": "OK"}
 
 

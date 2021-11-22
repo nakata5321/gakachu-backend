@@ -1,0 +1,10 @@
+version: "3"
+services:
+  gakachu:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "0.0.0.0:5000:5000"
+    network_mode: host
+    restart: always
