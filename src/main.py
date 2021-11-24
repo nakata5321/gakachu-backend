@@ -70,6 +70,10 @@ status = "available"
 def root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
+@app.get("/Loading", response_class=HTMLResponse)
+def root(request: Request):
+    return templates.TemplateResponse("loading/index.html", {"request": request})
+
 
 @app.post("/send_word", response_class=JSONResponse)
 def send_word(words: Word):
