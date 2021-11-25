@@ -22,18 +22,19 @@ def callback(ros_data: String) -> None:
     check = ros_data.data
     if check == "start":
         status = "busy"
-    else:
+    elif check == "stop":
         status = "available"
+    else:
+        rospy.logwarn("Error status message. should be 'start' or 'stop'.")
 
 
 word_publisher = rospy.Publisher("/word_for_gakachu", String, queue_size=1)
 color_publisher = rospy.Publisher("/color_height", String, queue_size=1)
 status_listener = rospy.Subscriber("/film", String, callback, queue_size=1)
-
-
+test_publisher = rospy.Publisher("/run", String, queue_size=1)
 dist_dir = rospy.get_param("/frontend/dist")
 
-
+# Fast API related
 app = FastAPI()
 
 
@@ -58,7 +59,6 @@ app.mount("/assets", StaticFiles(directory=dist_dir + "assets/"), name="assets")
 app.mount("/css", StaticFiles(directory=dist_dir + "assets/css"), name="css")
 app.mount("/data", StaticFiles(directory=dist_dir + "assets/data/"), name="data")
 app.mount("/Dev", StaticFiles(directory=dist_dir + "assets/data/dev"), name="Dev")
-
 app.mount("/js", StaticFiles(directory=dist_dir + "assets/js"), name="js")
 app.mount("/static", StaticFiles(directory=dist_dir + "assets/static"), name="static")
 
@@ -70,20 +70,39 @@ status = "available"
 def root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
+
 @app.get("/Loading", response_class=HTMLResponse)
-def root(request: Request):
+def loading_page(request: Request):
     return templates.TemplateResponse("loading/index.html", {"request": request})
 
 
 @app.post("/send_word", response_class=JSONResponse)
-def send_word(words: Word):
+def send_word(words: Word) -> dict:
     word_publisher.publish(String(words.word))
     return {"status": "OK"}
 
 
 @app.get("/status", response_class=JSONResponse)
-def root():
+def status_response() -> dict:
     return {"status": status}
+
+
+@app.get("/brush_lower", response_class=JSONResponse)
+def lower() -> dict:
+    color_publisher.publish("minus")
+    return {"status": "OK"}
+
+
+@app.get("/brush_raise", response_class=JSONResponse)
+def lower() -> dict:
+    color_publisher.publish("plus")
+    return {"status": "OK"}
+
+
+@app.get("/test_brush_position", response_class=JSONResponse)
+def test_position() -> dict:
+    test_publisher.publish("/home/kuka/kuka_pics/empty.png")
+    return {"status": "OK"}
 
 
 if __name__ == "__main__":
