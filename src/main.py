@@ -5,6 +5,7 @@ from std_msgs.msg import String
 import threading
 
 import uvicorn
+from typing import Dict, Any
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -14,7 +15,9 @@ from pydantic import BaseModel
 
 # ROS related
 
-threading.Thread(target=lambda: rospy.init_node("frontend", disable_signals=True)).start()
+threading.Thread(
+    target=lambda: rospy.init_node("frontend", disable_signals=True)
+).start()
 
 
 def callback(ros_data: String) -> None:
@@ -30,8 +33,8 @@ def callback(ros_data: String) -> None:
 
 word_publisher = rospy.Publisher("/word_for_gakachu", String, queue_size=1)
 color_publisher = rospy.Publisher("/color_height", String, queue_size=1)
-status_listener = rospy.Subscriber("/film", String, callback, queue_size=1)
 test_publisher = rospy.Publisher("/run", String, queue_size=1)
+status_listener = rospy.Subscriber("/film", String, callback, queue_size=1)
 dist_dir = rospy.get_param("/frontend/dist")
 
 # Fast API related
@@ -67,40 +70,40 @@ status = "available"
 
 
 @app.get("/", response_class=HTMLResponse)
-def root(request: Request):
+def root(request: Request) -> Any:
     return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.get("/Loading", response_class=HTMLResponse)
-def loading_page(request: Request):
+def loading_page(request: Request) -> Any:
     return templates.TemplateResponse("loading/index.html", {"request": request})
 
 
 @app.post("/send_word", response_class=JSONResponse)
-def send_word(words: Word) -> dict:
+def send_word(words: Word) -> Dict[str, str]:
     word_publisher.publish(String(words.word))
     return {"status": "OK"}
 
 
 @app.get("/status", response_class=JSONResponse)
-def status_response() -> dict:
+def status_response() -> Dict[str, str]:
     return {"status": status}
 
 
 @app.get("/brush_lower", response_class=JSONResponse)
-def lower() -> dict:
+def lower() -> Dict[str, str]:
     color_publisher.publish("minus")
     return {"status": "OK"}
 
 
 @app.get("/brush_raise", response_class=JSONResponse)
-def lower() -> dict:
+def raiser() -> Dict[str, str]:
     color_publisher.publish("plus")
     return {"status": "OK"}
 
 
 @app.get("/test_brush_position", response_class=JSONResponse)
-def test_position() -> dict:
+def test_position() -> Dict[str, str]:
     test_publisher.publish("/home/kuka/kuka_pics/empty.png")
     return {"status": "OK"}
 
