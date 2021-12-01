@@ -1,5 +1,5 @@
 <launch>
     <node name="frontend" type="main.py" pkg="gakachu_frontend" output="screen">
-        <param name="assets" value="$(find gakachu_frontend)/assets/" />
+        <param name="dist" value="$(find gakachu_frontend)/dist/" />
     </node>
 </launch>

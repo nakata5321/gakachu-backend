@@ -12,7 +12,7 @@ catkin_package()
 
 catkin_install_python(
 	PROGRAMS
-        src/frontend/main.py
+        src/main.py
     DESTINATION
         ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
@@ -23,11 +23,3 @@ install(
     DESTINATION
         ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
 )
-
-install(
-	DIRECTORY
-        assets/
-    DESTINATION
-        ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
-
