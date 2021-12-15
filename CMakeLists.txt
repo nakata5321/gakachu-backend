@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(gakachu_frontend)
+project(gakachu_backend)
 
 find_package(
 	catkin REQUIRED COMPONENTS

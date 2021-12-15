@@ -1,5 +1,6 @@
 <launch>
-    <node name="frontend" type="main.py" pkg="gakachu_frontend" output="screen">
-        <param name="dist" value="$(find gakachu_frontend)/dist/" />
+    <node name="backend" type="main.py" pkg="gakachu_backend" output="screen">
+        <param name="home_path" value="$(find gakachu_backend)" />
+        <param name="dist" value="$(find gakachu_backend)/dist/" />
     </node>
 </launch>

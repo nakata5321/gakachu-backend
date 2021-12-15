@@ -2,3 +2,7 @@ result
 
 # static files from frontend
 dist/
+
+# virtual enviroments
+venv
+*.idea*
