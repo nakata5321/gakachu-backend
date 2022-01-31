@@ -16,7 +16,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 
 from shutil import copyfile
-
+from os import remove
 # ROS related
 threading.Thread(
     target=lambda: rospy.init_node("backend", disable_signals=True)
@@ -105,7 +105,10 @@ def loading_page(request: Request) -> Any:
 
 # Result page
 @app.get("/drawing-finished", response_class=HTMLResponse)
-def loading_page(request: Request) -> Any:
+def finish_page(request: Request) -> Any:
+    dirname = rospy.get_param("/backend/home_path")
+    path_to_pic_file = dirname + "/dist/assets/static/pic.png"
+    remove(path_to_pic_file)
     return templates.TemplateResponse("drawing-finished/index.html", {"request": request})
 
 
@@ -142,7 +145,7 @@ def test_position() -> Dict[str, str]:
     return {"status": "OK"}
 
 
-# return qr code picture
+# return qr image picture
 @app.get("/picture", response_class=FileResponse)
 def drawing_picture_return():
     return picture_exist()
